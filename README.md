@@ -1,1 +1,1 @@
-# webboilerplate template
+# Spline eksempel
