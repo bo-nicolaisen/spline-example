@@ -1,0 +1,67 @@
+/* Grundlæggende udseende for hele siden */
+body {
+    margin: 0; /* fjerner browserens standardmargen, så indholdet går helt ud til kanten */
+    background: #4a4844; /* samme farve som baggrunden i Spline-scenen */
+    color: #fff;
+    font-family: system-ui, sans-serif; /* bruger styresystemets standardskrift */
+}
+
+/* Hele siden er en kolonne med scenen øverst og slideren nederst */
+.thermometer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* reserve til ældre browsere, der ikke kender dvh */
+    height: 100dvh; /* præcis skærmens højde, også når adresselinjen på mobilen skjules */
+}
+
+/* Området til 3D-scenen */
+.thermometer__scene {
+    position: relative; /* canvas placeres i forhold til dette område */
+    flex: 1; /* fylder al den plads, slideren ikke bruger */
+    min-height: 0; /* gør det muligt for området at blive mindre end sit indhold */
+    overflow: hidden; /* skjuler alt, der stikker uden for området */
+    container-type: size; /* gør det muligt at bruge cqw og cqh på canvas herunder */
+}
+
+/* Spline sætter selv canvas til 1080x1080 (scenens format) direkte på elementet.
+   Derfor skal der bruges !important for at skalere firkanten ned, så den passer
+   i pladsen over slideren. */
+.thermometer__scene canvas {
+    /* Centrerer canvas: top og left flytter hjørnet til midten, og transform
+       flytter derefter canvas halvdelen af sin egen størrelse tilbage. */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    /* cqw og cqh er områdets bredde og højde. min() vælger den mindste af dem,
+       så canvas forbliver kvadratisk og altid kan være der. */
+    width: min(100cqw, 100cqh) !important;
+    height: min(100cqw, 100cqh) !important;
+}
+
+/* Rækken under scenen med tekst, slider og temperatur */
+.thermometer__controls {
+    display: flex; /* lægger elementerne på en vandret række */
+    align-items: center; /* centrerer dem lodret i rækken */
+    gap: 16px; /* afstand mellem elementerne */
+    width: 100%;
+    max-width: 600px; /* rækken bliver ikke bredere end dette på store skærme */
+    margin: 0 auto; /* centrerer rækken vandret */
+    padding: 16px;
+    box-sizing: border-box; /* padding regnes med i bredden, så rækken ikke bliver for bred */
+}
+
+/* Selve slideren */
+.thermometer__controls input {
+    flex: 1; /* fylder den ledige plads i rækken */
+    min-width: 0; /* gør det muligt for slideren at skrumpe på smalle skærme */
+    accent-color: #e5484d; /* farver slideren rød ligesom termometeret */
+}
+
+/* Temperaturen til højre for slideren */
+.thermometer__controls output {
+    min-width: 4em; /* fast plads, så slideren ikke ændrer bredde, når teksten ændrer sig */
+    text-align: right;
+    font-variant-numeric: tabular-nums; /* alle cifre er lige brede, så tallet ikke hopper */
+}

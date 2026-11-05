@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
 
 <head>
@@ -14,12 +10,41 @@
     <link rel="icon" type="image/x-icon" href="/assets/img/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/assets/css/site.css">
-    <script src="assets/js/site.js" defer></script>
+    <!-- Import map: fortæller browseren, hvor "@splinetool/runtime" fra site.js skal
+         hentes fra. Det er nødvendigt, fordi projektet ikke bruger en bundler.
+         Selve map'et er JSON, og derfor kan der ikke stå kommentarer inde i det. -->
+    <script type="importmap">
+    {
+        "imports": {
+            "@splinetool/runtime": "https://unpkg.com/@splinetool/runtime@2.0.138/build/runtime.js"
+        }
+    }
+    </script>
+    <!-- type="module" gør det muligt at bruge import i site.js. Moduler venter selv på,
+         at HTML'en er indlæst, og de virker kun via en server, ikke fra file://. -->
+    <script type="module" src="assets/js/site.js"></script>
 </head>
 
 <body>
 
+    <main class="thermometer">
+        <!-- Området til 3D-scenen. Spline tegner termometeret på dette canvas. -->
+        <div class="thermometer__scene">
+            <canvas id="canvas3d"></canvas>
+        </div>
 
+        <!-- Betjeningen under scenen: tekst, slider og den aktuelle temperatur. -->
+        <div class="thermometer__controls">
+            <!-- for="temperature" kobler teksten til slideren med samme id. -->
+            <label for="temperature">Temperature</label>
+            <!-- Slideren går fra -20 til 40 i hele grader og starter på 12, ligesom
+                 termometeret i scenen. disabled slår den fra, indtil site.js slår den
+                 til, når scenen er loadet. -->
+            <input type="range" id="temperature" min="-20" max="40" step="1" value="12" disabled>
+            <!-- site.js opdaterer denne tekst, når slideren flyttes. -->
+            <output id="temperature-value" for="temperature">12 °C</output>
+        </div>
+    </main>
 
 </body>
 
